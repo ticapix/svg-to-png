@@ -3,7 +3,7 @@
 from argparse import ArgumentParser
 from selenium import webdriver
 import json, os
-from PIL import Image
+# from PIL import Image
 
 parser = ArgumentParser(
     description='Convert SVGs to PNGs'
@@ -31,18 +31,23 @@ def send(cmd, params={}):
     return response.get('value')
 
 options = webdriver.ChromeOptions()
-options.add_argument("disable-gpu")
-options.add_argument("disable-infobars")
+options.add_argument('--no-sandbox')
+options.add_argument('--window-size=1420,1080')
+options.add_argument('--headless')
+options.add_argument('--disable-gpu')
+options.add_argument("--disable-infobars")
+driver = webdriver.Chrome(options=options)
 
-driver = webdriver.Chrome(chrome_options=options)
 driver.get("file:///" + os.path.join(
     os.path.dirname(os.path.realpath(__file__)), 'wrap.html')
 )
 
-file = "file:///" + os.path.join(
+svgfile = "file:///" + os.path.join(
     os.path.dirname(os.path.realpath(__file__)), args.file)
 
-driver.execute_script('showImage("%s", "%s")' % (file, width))
+width = 1080
+
+driver.execute_script('showImage("%s", "%s")' % (svgfile, width))
 
 path = os.path.join(os.getcwd(), args.file)
 
@@ -53,12 +58,10 @@ out = args.out if args.out else args.file[:-4] + '.png'
 send("Emulation.setDefaultBackgroundColorOverride", {
     'color': {'r': 0, 'g': 0, 'b': 0, 'a': 0}
 })
-
-driver.get_screenshot_as_file(out)
+image = driver.find_element_by_id("svg").screenshot_as_png
 send("Emulation.setDefaultBackgroundColorOverride")  # restore
-
 driver.quit()
 
-im = Image.open(out)
-region = im.crop((0, 0, width, width))
-region.save(out)
+with open(out, 'wb') as fd:
+    fd.write(image)
+
