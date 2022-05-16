@@ -29,7 +29,6 @@ def svg2png():
     # to run in container
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
-    # options.add_argument('--window-size=1420,1080')
     options.add_argument('--headless')
     options.add_argument('--disable-gpu')
     options.add_argument("--disable-infobars")
@@ -47,11 +46,19 @@ def svg2png():
     })
     elt = driver.find_element(by=webdriver.common.by.By.TAG_NAME, value="svg")
 
-    image = elt.screenshot_as_png
+    # print(elt.rect)
+    # print('Window position', driver.get_window_position())
+    # print('Window size', driver.get_window_size())
 
+    # # driver.execute_script("arguments[0].style.transform='scale(1.0, 1.0)';", elt)
+    driver.set_window_size(elt.size['width']+1, elt.size['height']+1)
+
+    # image = elt.screenshot_as_png
+    driver.save_screenshot("screenshot.png")
+    bin = open('screenshot.png', 'rb').read()
     driver.quit()
-    # return base64.b64encode(image)
-    return b"data:image/png;base64," + base64.b64encode(image)
+    return b"data:image/png;base64," + base64.b64encode(bin)
+    # return b"data:image/png;base64," + base64.b64encode(image)
 
 
 if __name__ == '__main__':
