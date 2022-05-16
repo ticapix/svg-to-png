@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <script>
+    <head>
+        <script>
 function showImage(src, width) {
-    const $svg = document.getElementById('svg1')
-    $svg.src = src
-    $svg.width = width
+    let svg = document.getElementById('svg')
+    svg.src = src
+    // svg.width = width
+    // svg.style.maxWidth = '210mm';
 }
-        
-    </script>
-</head>
-<body style="background: transparent; margin: 0">
-<img id="svg1" src="#">
-</body>
+        </script>
+    </head>
+    <body style="background: transparent; margin: 0">
+        <img id="svg" src="#">
+    </body>
 </html>
