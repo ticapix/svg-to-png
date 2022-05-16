@@ -26,7 +26,13 @@ def svg2png():
     assert 'svg' in body, "No 'svg' parameter in body"
     svgsrc = body['svg']
     options = webdriver.ChromeOptions()
+    # to run in container
     options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    # options.add_argument('--window-size=1420,1080')
+    options.add_argument('--headless')
+    options.add_argument('--disable-gpu')
+    options.add_argument("--disable-infobars")
 
     desired_dpi = 2.0
     options.add_argument(f"--force-device-scale-factor={desired_dpi}")
@@ -49,5 +55,5 @@ def svg2png():
 
 
 if __name__ == '__main__':
-    # run app in debug mode on port 5000
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    # run app in debug mode on port 8080
+    app.run(debug=True, host="0.0.0.0", port=8080)
