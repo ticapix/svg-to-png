@@ -13,7 +13,6 @@ docker run -d --name svg2png svg2png:latest
 sleep 2
 
 host=http://`docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' svg2png`:8080
-host=https://http://app-3e36945c-bbb9-4e9a-bf9f-36a7e0356229.cleverapps.io/
 
 echo found docker running at $host
 
