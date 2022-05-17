@@ -4,7 +4,9 @@ from flask import Flask, request
 from selenium import webdriver
 import json
 import base64
+import io
 from flask_cors import CORS
+from PIL import Image
 
 
 app = Flask(__name__)
@@ -35,6 +37,7 @@ def svg2png():
 
     desired_dpi = 2.0
     options.add_argument(f"--force-device-scale-factor={desired_dpi}")
+    options.add_argument("--high-dpi-support=1")
 
     driver = webdriver.Chrome(options=options)
     print(svgsrc[:32])
@@ -55,10 +58,21 @@ def svg2png():
 
     # image = elt.screenshot_as_png
     driver.save_screenshot("screenshot.png")
-    bin = open('screenshot.png', 'rb').read()
     driver.quit()
-    return b"data:image/png;base64," + base64.b64encode(bin)
-    # return b"data:image/png;base64," + base64.b64encode(image)
+    im = Image.open("screenshot.png")
+    #Make the new image half the width and half the height of the original image
+    resized_im = im
+    # print(im.info)
+    # resized_im = im.resize((round(im.size[0]*0.5), round(im.size[1]*0.5)), Image.LANCZOS)
+
+    img_byte_arr = io.BytesIO()
+    resized_im.save(img_byte_arr, format='PNG') #, dpi=(300, 300))
+    return {"png": "data:image/png;base64," + base64.b64encode(img_byte_arr.getvalue()).decode('utf-8'),
+            "width": im.size[0],
+            "height": im.size[1]
+    }
+    # bin = open('screenshot.png', 'rb').read()
+    # return b"data:image/png;base64," + base64.b64encode(bin)
 
 
 if __name__ == '__main__':
