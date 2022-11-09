@@ -1,3 +1,5 @@
+# DEPRECATED IN FAVOR OF <https://gitlab.com/pierre.gronlier/mermaid-server>
+
 # Convert SVGs to PNGs
 
 A script to convert SVG files to PNG format
